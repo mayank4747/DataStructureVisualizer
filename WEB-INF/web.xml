@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/webapp_
+2_5.xsd">
+<servlet>
+<servlet-name>getCities</servlet-name>
+<servlet-class>com.DoSomething</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>getCities</servlet-name>
+<url-pattern>/getCities</url-pattern>
+</servlet-mapping>
+
+</web-app>

@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="jquery.min.js"></script>
+<title>Data Structure Visualizor</title>
+</head>
+<body>
+
+<div id = 'home' style = 'position: relative; background: #060C21;'>
+	<center>
+		<h1><center><b> Data Structure Visualization</b></center></h1>
+		<br>
+		<input type = 'button' onclick = 'javascript: showStack()' value = 'Stack'>
+		<input type = 'button' onclick = 'javascript: showQueue()' value = 'Queue'>
+		<input type = 'button' onclick = 'javascript: showLinkedList()' value = 'Linked List'>
+		<input type = 'button' onclick = 'javascript: showBinaryTree()' value = 'Binary Tree'>
+	</center>
+</div>
+
+<div id = 'stack' style = 'visibility: hidden; position: absolute; margin-top: -80px;'>
+	<div>
+		<button onclick = 'javascript: showHome("stack")'>Home</button>
+		&nbsp;&nbsp;&nbsp;
+		<input type = 'text' id = 'stackValue'>
+		&nbsp;&nbsp;
+		<input type = 'button' onclick = 'javascript: push()' value = 'push'></button>
+		<span id = 'pushErrorSection'></span>
+		<br>
+		<button onclick = 'javascript: pop()'>pop</button>
+		<button onclick = 'javascript: emptyStack()'>empty</button>
+	</div>
+	<div id = 'stackView'></div>
+</div>
+
+<div id = 'queue' style = 'visibility: hidden; position: absolute; margin-top: -80px;'>
+	<div>
+		<button onclick = 'javascript: showHome("queue")'>Home</button>
+		&nbsp;&nbsp;&nbsp;
+		<input type = 'text' id = 'queueValue'>
+		&nbsp;&nbsp;
+		<input type = 'button' onclick = 'javascript: enQueue()' value = 'enQueue'></button>
+		<span id = 'enQueueErrorSection'></span>
+		<br>
+		<button onclick = 'javascript: deQueue()'>deQueue</button>
+		<button onclick = 'javascript: emptyQueue()'>empty</button>
+	</div>
+	<br><br><br><br>
+	<table>
+		<tr height = '100px'></tr>
+		<tr id = 'queueView'>
+			<td id = 'queueDummyCell' style = 'min-width: 300px; height: 58px;'></td>
+		</tr>
+	</table>
+</div>
+
+<div id = 'linkedList' style = 'visibility: hidden; position: absolute; margin-top: -80px;'>
+	<div>
+		<button onclick = 'javascript: showHome("linkedList")'>Home</button>
+		&nbsp;&nbsp;&nbsp;
+		<input type = 'text' id = 'linkedListValue'>
+		<span id = 'insertErrorSection'></span>
+		&nbsp;&nbsp;
+		<input type = 'button' onclick = 'javascript: insertAtTop()' value = 'insertAtTop'></button>
+		<button onclick = 'javascript: insertAtEnd()'>insertAtEnd</button>
+		<input type = 'text' id = 'insertPositionValue'>
+		<span id = 'insertPositionErrorSection'></span>
+		<button onclick = 'javascript: insertAtPosition()'>insertAtPosition</button>
+		<br>
+		<button onclick = 'javascript: deleteFromTop()'>deleteFromTop</button>
+		<button onclick = 'javascript: deleteFromEnd()'>deleteFromEnd</button>
+		<input type = 'text' id = 'deletePositionValue'>
+		<span id = 'deletePositionErrorSection'></span>
+		<button onclick = 'javascript: deleteFromPosition()'>deleteFromPosition</button>
+		<button onclick = 'javascript: emptyLinkedList()'>empty</button>
+	</div>
+	<br><br><br><br>
+	<table>
+		<tr height = '100px'></tr>
+		<tr id = 'linkedListView'>
+			<td id = 'linkedListDummyCell' style = 'min-width: 300px; max-height: 35px;'></td>
+		</tr>
+	</table>
+</div>
+
+<div id = 'binaryTree' style = ' visibility: hidden; position: absolute; margin-top: -80px; background: #060C21;'>
+	<div>
+		<button id = 'binarySearchTreeToHome' onclick = 'javascript: showHome("binaryTree")'>Home</button>
+		&nbsp;&nbsp;&nbsp;
+		<input type = 'text' id = 'binaryTreeValue'>
+		<span id = 'addToBinaryTreeErrorSection'></span>
+		&nbsp;&nbsp;
+		<input id = 'insertToBinarySearchTreeButton' type = 'button' onclick = 'javascript: insertToBinarySearchTree()' value = 'insert'>
+		<input type = 'text' id = 'removeValue'>
+		<span id = 'removeFromBinaryTreeErrorSection'></span>
+		<button id = 'removeFromBinarySearchTreeButton' onclick = 'javascript: removeFromBinarySearchTree()'>remove</button>
+		<button id = 'emptyBinarySearchTreeButton' onclick = 'javascript: emptyBinaryTree()'>empty</button>
+	</div>
+	<div id = 'binarySearchTreeView'></div>
+	<svg id = 'svg' width = '1350' height = '500'></svg>
+</div>
+
+<style>
+	:root {
+		--oldX: 100px;
+		--oldY: 100px;
+		--newX: 400px;
+		--newY: 350px;
+	}
+	/*stack animation starts here*/
+	@keyframes push {
+		from {
+			transform: translateX(-100px);
+		}
+		to {
+			transform: translateX(400px);
+		}
+	}
+	@keyframes pop {
+		from {
+			transform: translateX(400px);
+		}
+		to {
+			transform: translateX(-100px);
+		}
+	}
+	/*stack animation ends here*/
+
+	/*queue animation starts here*/
+	@keyframes enQueue {
+		from {
+			transform: translateX(-100px);
+		}
+		to {
+			transform: translateX(200px);
+		}
+	}
+	@keyframes deQueue {
+		from {
+			transform: translateX(210px);
+		}/*calc(var(--from) * 1px)*/
+		to {
+			transform: translateX(700px));
+		}/*calc(var(--to) * 1px*/
+	}
+	/*queue animation ends here*/
+
+	/*linked list animation starts here*/
+	@keyframes insert {
+		from {
+			transform: translate(-100px, 100px);
+		}
+		50% {
+			transform: translate(50px, 100px);
+		}
+		to {
+			transform: translate(200px, 0px);
+		}
+	}
+	@keyframes delete {
+		from {
+
+			transform: translate(200px, 0px);
+		}
+		50% {
+			transform: translate(50px, 100px);
+		}
+		to {
+			transform: translate(-100px, 100px);
+		}
+	}
+	/*linked list animation ends here*/
+
+	/*binary serch tree animation starts here*/
+	.highlightNode {
+		animation-name: highlight-node;
+		animation-duration: 1s;
+		animation-direction: all;
+		animation-iteration-count: initial;
+	}
+	@keyframes highlight-node {
+		0% {
+			background: #01DF3A;
+			border: 3px solid green;
+			color: black;
+		}
+		50% {
+			background: #ffc300;
+			border: 3px solid #ffc300;
+			color: white;
+		}
+		100% {
+			background: #01DF3A;
+			border: 3px solid green;
+			color: black;
+		}
+	}
+	.highlightLine {
+		animation-name: highlight-line;
+		animation-duration: 1s;
+		animation-direction: all;
+		animation-iteration-count: initial;
+	}
+	@keyframes highlight-line {
+		0% {
+			stroke: green;
+			stroke-width: 3;
+		}
+		50% {
+			stroke: #ffc300;
+			stroke-width: 10;
+		}
+		100% {
+			stroke: green;
+			stroke-width: 3;
+		}
+	}
+	.animateLine {
+		animation-name: addLine;
+		animation-duration: 0.8s;
+		animation-direction: all;
+		animation-iteration-count: initial;
+	}
+	@keyframes addLine {
+		from {
+			stroke-dashoffset: 500;
+			stroke: #ffc300;
+			stroke-width: 10;
+		}
+		to {
+			stroke-dashoffset: 0;
+			stroke: green;
+			stroke-width: 3;
+		}
+	}
+	.rearrange {
+		animation-name: rearrangeNode;
+		animation-duration: 1s;
+		animation-direction: all;
+		animation-iteration-count: initial;
+		animation-timing-function: linear;
+	}
+	@keyframes rearrangeNode {
+		from {
+			transform: translate(calc(var(--oldX) * 1px), calc(var(--oldY) * 1px));
+		}
+		to {
+			transform: translate(calc(var(--newX) * 1px), calc(var(--newY) * 1px));
+		}
+	}
+	/*binary serch tree animation ends here*/
+</style>
+<script>
+	function showStack()
+	{
+		document.getElementById('home').style.visibility = 'hidden';
+		document.getElementById('stack').style.visibility = 'visible';
+	}
+	function showQueue()
+	{
+		document.getElementById('home').style.visibility = 'hidden';
+		document.getElementById('queue').style.visibility = 'visible';
+	}
+	function showLinkedList()
+	{
+		document.getElementById('home').style.visibility = 'hidden';
+		document.getElementById('linkedList').style.visibility = 'visible';
+	}
+	function showBinaryTree()
+	{
+		document.getElementById('home').style.visibility = 'hidden';
+		document.getElementById('binaryTree').style.visibility = 'visible';
+	}
+	function showHome(id)
+	{
+		$('#' + id + 'View').empty();
+		if(id == 'stack') stack.splice(0, stack.length);
+		if(id == 'queue') queue.splice(0, queue.length);
+		if(id == 'linkedList') linkedList.splice(0, linkedList.length);
+		if(id == 'binaryTree') {} // create binary tree
+		document.getElementById(id).style.visibility = 'hidden';
+		document.getElementById('home').style.visibility = 'visible';
+	}
+
+	// stack starts here
+	var stack = [];
+	function push()
+	{
+		// alert('stackNode' + array.length);
+		var error;
+		var number = document.getElementById('stackValue').value;
+		if(number.length == 0 || number == '')
+		{
+			error = "Invalid input";
+			document.getElementById('pushErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(number))
+		{
+			error = "Invalid input";
+			document.getElementById('pushErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			number = parseInt(number);
+			document.getElementById('pushErrorSection').innerHTML = '';
+		}
+		var div = document.createElement('div');
+		div.className = 'stackNodeClass' + stack.length;
+		div.id = 'stackNode' + stack.length;
+		var label = document.createElement('label');
+		label.innerHTML=number;
+		label.style = 'line-height: 50px;';
+		div.append(label);
+		document.getElementById('stackView').prepend(div);
+		div.style = 'width: 50px;height: 50px;border: 4px solid green;text-align: center;background: #01DF3A;border-radius: 50%;animation-name: push;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(400px);';
+		stack.push(number);
+	}
+	function pop()
+	{
+		if(stack.length == 0)
+		{
+			document.getElementById('pushErrorSection').innerHTML = 'Stack is empty';
+			return;
+		}
+		else
+		{
+			document.getElementById('pushErrorSection').innerHTML = '';
+		}
+		var id = 'stackNode' + (stack.length - 1);
+		var className = 'stackNodeClass' + (stack.length - 1);
+		var element=document.getElementById(id);
+		element.style = 'width: 50px;height: 50px;border: 4px solid green;text-align: center;background: #01DF3A;border-radius: 50%;animation-name: pop;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(-100px);';
+		element.addEventListener('animationend', function() {
+			var x = document.getElementsByClassName(className);
+			var length = x.length;
+			if(length == 1)
+			{
+				x[length - 1].remove();
+				return;
+			}
+			var e = 1;
+			while(e < length)
+			{
+				x[e].remove();
+				++e;
+			}
+		});
+		stack.pop();
+		// alert('stackNode' + array.length);
+	}
+	function emptyStack()
+	{
+		if(stack.length == 0)
+		{
+			document.getElementById('pushErrorSection').innerHTML = 'Stack is empty';
+			return;
+		}
+		// alert('empty');
+		stack.splice(0, stack.length);
+		$('#stackView').empty();
+	}
+	// stack ends here
+
+	// queue starts here
+	var queue = [];
+	var root = document.documentElement;
+	var counter = 0;
+	function enQueue()
+	{
+		window.scrollTo(0, 0);
+		var error;
+		var number = document.getElementById('queueValue').value;
+		if(number.length == 0 || number == '')
+		{
+			error = "Invalid input";
+			document.getElementById('enQueueErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(number))
+		{
+			error = "Invalid input";
+			document.getElementById('enQueueErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			number = parseInt(number);
+			document.getElementById('enQueueErrorSection').innerHTML = '';
+		}
+		var td = document.createElement('td');
+		td.className = 'queueNodeClass' + (queue.length + counter);
+		td.id = 'queueNode' + (queue.length + counter);
+		// var label = document.createElement('label');
+		// label.innerHTML=number;
+		// label.style = 'line-height: 50px;';
+		// td.append(label);
+		td.innerHTML = number;
+		document.getElementById('queueView').prepend(td);
+		td.style = 'min-width: 50px; height: 50px;border: 4px solid green;text-align: center;background: #01DF3A;border-radius: 50%;animation-name: enQueue;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(200px);';
+		queue.push(number);
+		td.addEventListener('animationend', function() {
+			var r = td.getBoundingClientRect();
+			// alert(r.left + ' ' + r.top);
+		});
+	}
+	function deQueue()
+	{
+		if(queue.length == 0)
+		{
+			document.getElementById('enQueueErrorSection').innerHTML = 'Queue is empty';
+			return;
+		}
+		else
+		{
+			document.getElementById('enQueueErrorSection').innerHTML = '';
+		}
+		var id = 'queueNode' + counter;
+		var className = 'queueNodeClass' + counter;
+		var element=document.getElementById(id);
+		window.scrollTo(200 + (element.offsetLeft + 58) + 300, 0);
+		// alert(element.offsetLeft);
+		root.style.setProperty('--from', element.offsetLeft + 58);
+		root.style.setProperty('--to', (element.offsetLeft + 58) + 1100);
+		element.style = 'min-width: 50px;height: 50px;border: 4px solid green;text-align: center;background: #01DF3A;border-radius: 50%;animation-name: deQueue;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(calc(var(--to) * 1px));';
+		// document.head.append(sheet);
+		// document.style += sheet.innerHTML;
+		element.addEventListener('animationend', function() {
+			window.scrollTo(0, 0);
+			var x = document.getElementsByClassName(className);
+			var length = x.length;
+			if(length == 1)
+			{
+				x[length - 1].remove();
+				return;
+			}
+			var e = 1;
+			while(e < length)
+			{
+				x[e].remove();
+				++e;
+			}
+		});
+		queue.splice(0, 1);
+		counter++;
+		// alert('stackNode' + array.length);
+	}
+	function emptyQueue()
+	{
+		if(queue.length == 0)
+		{
+			document.getElementById('enQueueErrorSection').innerHTML = 'Queue is empty';
+			return;
+		}
+		counter = 0;
+		queue.splice(0, queue.length);
+		var view = document.getElementById('queueView');
+		$('#queueView').empty();
+		var td = document.createElement('td');
+		td.id = 'queueDummyCell';
+		td.style = 'min-width: 300px; height: 58px;';
+		view.prepend(td);
+	}
+	// queue ends here
+
+	// linked list  starts here
+	function Pair(linkedListNodeClassName, linkClassName)
+	{
+		this.linkedListNodeClassName = linkedListNodeClassName;
+		this.linkClassName = linkClassName;
+	}
+	var linkedList = [];
+	var listCounter = 0;
+	function insertAtTop()
+	{
+		window.scrollTo(0, 0);
+		var error;
+		var number = document.getElementById('linkedListValue').value;
+		if(number.length == 0 || number == '')
+		{
+			error = "Invalid input";
+			document.getElementById('insertErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(number))
+		{
+			error = "Invalid input";
+			document.getElementById('insertErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			number = parseInt(number);
+			document.getElementById('insertErrorSection').innerHTML = '';
+		}
+		var td = document.createElement('td');
+		td.className = 'linkedListNodeClass' + listCounter;
+		td.id = 'linkedListNode' + listCounter;
+		td.innerHTML = number;
+		td.style = 'min-width: 50px; min-height: 35px;border: 2px solid green;text-align: center; animation-name: insert;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(200px);';
+		var line = document.createElement('img');
+		var f = 0;
+		if(linkedList.length != 0)
+		{
+			f = 1;
+			line.id = 'line' + listCounter;
+			line.className = 'lineClass' + listCounter;
+			line.src = '2.png';
+			line.style = 'min-width: 50px; max-height: 35px; transform: translateX(200px); visibility: hidden;';
+			document.getElementById('linkedListView').prepend(line);
+			linkedList.splice(0, 0, (new Pair(td.className, line.className)));
+		}
+		else
+		{
+			linkedList.splice(0, 0, (new Pair(td.className, null)));
+		}
+		document.getElementById('linkedListView').prepend(td);
+		listCounter++;
+		td.addEventListener('animationend', function() {
+			if(f == 1) document.getElementById(line.id).style.visibility = 'visible';
+		});
+	}
+	function insertAtEnd()
+	{
+		window.scrollTo(linkedList.length * 100, 0);
+		var error;
+		var number = document.getElementById('linkedListValue').value;
+		if(number.length == 0 || number == '')
+		{
+			error = "Invalid input";
+			document.getElementById('insertErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(number))
+		{
+			error = "Invalid input";
+			document.getElementById('insertErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			number = parseInt(number);
+			document.getElementById('insertErrorSection').innerHTML = '';
+		}
+		var td = document.createElement('td');
+		td.className = 'linkedListNodeClass' + listCounter;
+		td.id = 'linkedListNode' + listCounter;
+		td.innerHTML = number;
+		td.style = 'min-width: 50px; max-height: 35px;border: 2px solid green;text-align: center;animation-name: insert;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(200px);';
+		var line = document.createElement('img');
+		var f = 0;
+		if(linkedList.length != 0)
+		{
+			f = 1;
+			line.id = 'line' + listCounter;
+			line.className = 'lineClass' + listCounter;
+			line.src = '2.png';
+			line.style = 'min-width: 50px; max-height: 35px; transform: translateX(200px); visibility: hidden;';
+			document.getElementById('linkedListView').insertBefore(line, document.getElementById('linkedListDummyCell'));
+			linkedList[linkedList.length - 1].linkClassName = line.className;
+		}
+		linkedList.splice(linkedList.length, 0, (new Pair(td.className, null)))
+		document.getElementById('linkedListView').insertBefore(td, document.getElementById('linkedListDummyCell'));
+		listCounter++;
+		td.addEventListener('animationend', function() {
+			window.scrollTo(0, 0);
+			if(f == 1) document.getElementById(line.id).style.visibility = 'visible';
+		});
+	}
+	function insertAtPosition()
+	{
+		var position = document.getElementById('insertPositionValue').value;
+		if(position.length == 0 || position == '')
+		{
+			error = "Invalid position";
+			document.getElementById('insertPositionErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(position))
+		{
+			error = "Invalid position";
+			document.getElementById('insertPositionErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			position = parseInt(position);
+			document.getElementById('insertPositionErrorSection').innerHTML = '';
+		}
+		if(position <= 0 || position > linkedList.length + 1)
+		{
+			error = "Invalid position";
+			document.getElementById('insertPositionErrorSection').innerHTML = error;
+			return;
+		}
+		if(position == 1)
+		{
+			insertAtTop();
+			return;
+		}
+		if(position == linkedList.length + 1)
+		{
+			insertAtEnd();
+			return;
+		}
+		window.scrollTo(position * 100, 0);
+		var error;
+		var number = document.getElementById('linkedListValue').value;
+		if(number.length == 0 || number == '')
+		{
+			error = "Invalid input";
+			document.getElementById('insertErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(number))
+		{
+			error = "Invalid input";
+			document.getElementById('insertErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			number = parseInt(number);
+			document.getElementById('insertErrorSection').innerHTML = '';
+		}
+		var td = document.createElement('td');
+		td.className = 'linkedListNodeClass' + listCounter;
+		td.id = 'linkedListNode' + listCounter;
+		td.innerHTML = number;
+		td.style = 'min-width: 50px; max-height: 35px;border: 2px solid green;text-align: center;animation-name: insert;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(200px);';
+		var line = document.createElement('img');
+		line.id = 'line' + listCounter;
+	 	line.className = 'lineClass' + listCounter;
+		line.src = '2.png';
+		line.style = 'min-width: 50px; max-height: 35px; transform: translateX(200px); visibility: hidden;';
+
+		document.getElementById('linkedListView').insertBefore(line, document.getElementById('linkedListNode' + linkedList[position - 1].linkedListNodeClassName.substring(19)));
+
+		document.getElementById('linkedListView').insertBefore(td, line);
+		linkedList.splice(position - 1, 0, (new Pair(td.className, line.className)));
+		listCounter++;
+		td.addEventListener('animationend', function() {
+			window.scrollTo(0, 0);
+			document.getElementById(line.id).style.visibility = 'visible';
+		});
+	}
+	function deleteFromTop()
+	{
+		if(linkedList.length == 0)
+		{
+			document.getElementById('insertErrorSection').innerHTML = 'Linked list is empty';
+			return;
+		}
+		else
+		{
+			document.getElementById('insertErrorSection').innerHTML = '';
+		}
+		var id = 'linkedListNode' + linkedList[0].linkedListNodeClassName.substring(19);
+		var className = linkedList[0].linkedListNodeClassName;
+		var element=document.getElementById(id);
+		window.scrollTo(0, 0);
+		element.style = 'min-width: 50px;max-height: 35px;border: 2px solid green;text-align: center;animation-name: delete;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(-100px);';
+		// document.head.append(sheet);
+		// document.style += sheet.innerHTML;
+		element.addEventListener('animationend', function() {
+			window.scrollTo(0, 0)	;
+			var x = document.getElementsByClassName(className);
+			var length = x.length;
+			if(length == 1)
+			{
+				x[length - 1].remove();
+				return;
+			}
+			var e = 1;
+			while(e < length)
+			{
+				x[e].remove();
+				++e;
+			}
+		});
+		if(linkedList.length != 1)
+		{
+			document.getElementsByClassName(linkedList[0].linkClassName)[0].remove();
+		}
+		linkedList.splice(0, 1);
+	}
+	function deleteFromEnd()
+	{
+		if(linkedList.length == 0)
+		{
+			document.getElementById('insertErrorSection').innerHTML = 'Linked list is empty';
+			return;
+		}
+		else
+		{
+			document.getElementById('insertErrorSection').innerHTML = '';
+		}
+		var id = 'linkedListNode' + linkedList[linkedList.length - 1].linkedListNodeClassName.substring(19);
+		var className = linkedList[linkedList.length - 1].linkedListNodeClassName;
+		var element=document.getElementById(id);
+		window.scrollTo(200 + (linkedList.length * 100), 0);
+		// alert(element.offsetLeft);
+		element.style = 'min-width: 50px;max-height: 35px;border: 2px solid green;text-align: center;animation-name: delete;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(-100px);';
+		// document.head.append(sheet);
+		// document.style += sheet.innerHTML;
+		element.addEventListener('animationend', function() {
+			window.scrollTo(0, 0);
+			var x = document.getElementsByClassName(className);
+			var length = x.length;
+			if(length == 1)
+			{
+				x[length - 1].remove();
+				return;
+			}
+			var e = 1;
+			while(e < length)
+			{
+				x[e].remove();
+				++e;
+			}
+		});
+		if(linkedList.length != 1)
+		{
+			document.getElementsByClassName(linkedList[linkedList.length - 2].linkClassName)[0].remove();
+		}
+		linkedList.splice(linkedList.length - 1, 1);
+	}
+	function deleteFromPosition()
+	{
+		if(linkedList.length == 0)
+		{
+			document.getElementById('insertErrorSection').innerHTML = 'Linked list is empty';
+			return;
+		}
+		else
+		{
+			document.getElementById('insertErrorSection').innerHTML = '';
+		}
+		var position = document.getElementById('deletePositionValue').value;
+		if(position.length == 0 || position == '')
+		{
+			error = "Invalid position";
+			document.getElementById('deletePositionErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(position))
+		{
+			error = "Invalid position";
+			document.getElementById('deletePositionErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			position = parseInt(position);
+			document.getElementById('deletePositionErrorSection').innerHTML = '';
+		}
+		if(position <= 0 || position > linkedList.length)
+		{
+			error = "Invalid position";
+			document.getElementById('deletePositionErrorSection').innerHTML = error;
+			return;
+		}
+		if(position == 1)
+		{
+			deleteFromTop();
+			return;
+		}
+		if(position == linkedList.length)
+		{
+			deleteFromEnd();
+			return;
+		}
+		window.scrollTo(position * 100, 0);
+		var id = 'linkedListNode' + linkedList[position - 1].linkedListNodeClassName.substring(19);
+		var className = linkedList[position - 1].linkedListNodeClassName;
+		var element=document.getElementById(id);
+		// alert(element.offsetLeft);
+		element.style = 'min-width: 50px;max-height: 35px;border: 2px solid green;text-align: center;animation-name: delete;animation-duration: 2s;animation-iteration-count: initial;animation-direction: all;transition-property: transform;transform: translateX(-100px);';
+		// document.head.append(sheet);
+		// document.style += sheet.innerHTML;
+		element.addEventListener('animationend', function() {
+			window.scrollTo(0, 0);
+			var x = document.getElementsByClassName(className);
+			var length = x.length;
+			if(length == 1)
+			{
+				x[length - 1].remove();
+				return;
+			}
+			var e = 1;
+			while(e < length)
+			{
+				x[e].remove();
+				++e;
+			}
+		});
+		document.getElementsByClassName(linkedList[position - 1].linkClassName)[0].remove();
+		linkedList.splice(position - 1, 1);
+	}
+	function emptyLinkedList()
+	{
+		if(linkedList.length == 0)
+		{
+			document.getElementById('insertErrorSection').innerHTML = 'Linked list is empty';
+			return;
+		}
+		listCounter = 0;
+		linkedList.splice(0, linkedList.length);
+		var view = document.getElementById('linkedListView');
+		$('#linkedListView').empty();
+		var td = document.createElement('td');
+		td.id = 'linkedListDummyCell';
+		td.style = 'min-width: 300px; max-height: 35px;';
+		view.prepend(td);
+	}
+	// linked list ends here
+
+	// binary tree starts here
+	function Node(data, element)
+	{
+		this.data = data;
+		this.element = element;
+		this.leftLine = null;
+		this.rightLine = null;
+		this.left = null;
+		this.right = null;
+	}
+	function NodeQueueObject(node)
+	{
+		this.node = node;
+		this.line = null;
+		this.message = '';
+	}
+	var highlightNodeQueue = [];
+	var newElement = null;
+	var newLine = null;
+	var newNumber;
+	var bCounter = 0;
+	var binarySearchTreeRoot = null;
+	function insertToBinarySearchTree()
+	{
+		newElement = null;
+		newLine = null;
+		window.scrollTo(0, 0);
+		var error;
+		var number = document.getElementById('binaryTreeValue').value;
+		if(number.length == 0 || number == '')
+		{
+			error = "Invalid input";
+			document.getElementById('addToBinaryTreeErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(number))
+		{
+			error = "Invalid input";
+			document.getElementById('addToBinaryTreeErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			number = parseInt(number);
+			document.getElementById('addToBinaryTreeErrorSection').innerHTML = '';
+		}
+		disableInputFields();
+		var length = 640;
+		var distance = 640;
+		var height = 0;
+		var newNode, node;
+		if(binarySearchTreeRoot == null)
+		{
+			var div = document.createElement('div');
+			div.id = 'binarySearchTreeNode' + bCounter;
+			div.className = 'binarySearchTreeNodeClass' + bCounter;
+			var label = document.createElement('label');
+			label.innerHTML = number;
+			label.style = 'line-height: 34px;';
+			div.append(label);
+			div.style = 'min-width: 34px; height: 34px; border: 3px solid green; position: absolute; top: 20px; text-align: center; background: #01DF3A;border-radius: 50%; transition-property: transform;transform: translate(' + length + 'px, ' + (height * 80) + 'px);';
+			div.classList.add('highlightNode');
+			div.addEventListener('animationend', function() {
+				// alert('afF');
+				div.removeEventListener('animationend', this);
+				// alert('afF1');
+				div.classList.remove('highlightNode');
+				// alert('uu');
+			});
+			bCounter++;
+			// document.getElementById('binarySearchTreeView').append(div);
+			newElement = div;
+			newNumber = number;
+			newNode = new Node(number, div);
+			binarySearchTreeRoot = newNode;
+		}
+		else
+		{
+			node = binarySearchTreeRoot;
+			while(true)
+			{
+				// node.element.classList.add('highlightNode');
+				// var j = false;
+				// node.element.addEventListener('animationend', function() {
+					// node.element.classList.remove('highlightNode');
+				// 	// alert('Done');
+				// 	// alert('j = ' + j);
+				// 	j = true;
+				// 	// alert('j = ' + j);
+				// });
+					// for(;true;) {
+					// 	alert('OK ' + j);
+					// 	if(j) break;
+					// }
+				var nodeQueueObject = new NodeQueueObject(node.element);
+				if(number == node.data)
+				{
+					alert(number + ' is already present');
+					nodeQueueObject.message = number + ' is already present';
+					highlightNodeQueue.push(nodeQueueObject);
+					break;
+				}
+				if(height == 5)
+				{
+					alert('Height should be less than 6');
+					nodeQueueObject.message = 'Height should be less than 6';
+					highlightNodeQueue.push(nodeQueueObject);
+					break;
+				}
+				if(number < node.data)
+				{
+					distance /= 2;
+					length -= distance;
+					height++;
+					if(node.left == null)
+					{
+						var div = document.createElement('div');
+						div.id = 'binarySearchTreeNode' + bCounter;
+						div.className = 'binarySearchTreeNodeClass' + bCounter;
+						var label = document.createElement('label');
+						label.innerHTML = number;
+						label.style = 'line-height: 34px;';
+						div.append(label);
+						div.style = 'min-width: 34px; height: 34px; border: 3px solid green; position: absolute; top: 20px; text-align: center; background: #01DF3A;border-radius: 50%; transition-property: transform;transform: translate(' + length + 'px, ' + (height * 80) + 'px);';
+						div.classList.add('highlightNode');
+						div.addEventListener('animationend', function() {
+							div.classList.remove('highlightNode');
+						});
+						var line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+						line.id = 'binarySearchTreeLine' + bCounter;
+						line.className = 'binarySearchTreeLineClass' + bCounter;
+						// canvas.setAttribute('width', distance - 40 + 15 + ((height - 0) * 3));
+						// canvas.setAttribute('height', 40 + 18 + 13 - ((height - 1) * 2));
+						// canvas.style = 'position: absolute; transform: translate(' + (length  + 40 - 10 - ((height - 0) * 2)) + 'px, ' + ((height * 80) - 40 - 13 + ((height - 1) * 1)) + 'px);';
+						line.style = 'stroke: green; stroke-width: 3; stroke-dasharray: 500;';
+						line.classList.add('animateLine');
+						// var ctx = canvas.getContext("2d");
+						// ctx.beginPath();
+						// ctx.moveTo(distance - 40 + 15 + ((height - 0) * 3), 0);
+						var x1 = length + distance + 20;
+						var y1 = (height * 80) - 80 + 20;
+						var x2 = length + 20;
+						var y2 = (height * 80) + 20;
+						// line.setAttribute('x1', x1);
+						// line.setAttribute('y1', y1);
+						// line.setAttribute('x2', x2);
+						// line.setAttribute('y2', y2);
+						line.setAttribute('d', 'M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2);
+						// ctx.lineTo(0, 40 + 18 + 13 + ((height - 1) * 2));
+						// ctx.strokeStyle = 'green';
+						// ctx.lineWidth = 3;
+						// ctx.stroke();
+						bCounter++;
+						// document.getElementById('binarySearchTreeView').append(canvas);
+						// document.getElementById('binarySearchTreeView').append(div);
+						newElement = div;
+						newLine = line;
+						newNumber = number;
+						nodeQueueObject.message = number + ' is less than ' + node.data + ', so go left';
+						highlightNodeQueue.push(nodeQueueObject);
+						newNode = new Node(number, div);
+						node.left = newNode;
+						node.leftLine = line;
+						break;
+					}
+					else
+					{
+						nodeQueueObject.line = node.leftLine;
+						nodeQueueObject.message = number + ' is less than ' + node.data + ', so go left';
+						highlightNodeQueue.push(nodeQueueObject);
+						node = node.left;
+					}
+				}
+				else
+				{
+					distance /= 2;
+					length += distance;
+					height++;
+					if(node.right == null)
+					{
+						var div = document.createElement('div');
+						div.id = 'binarySearchTreeNode' + bCounter;
+						div.className = 'binarySearchTreeNodeClass' + bCounter;
+						var label = document.createElement('label');
+						label.innerHTML = number;
+						label.style = 'line-height: 34px;';
+						div.append(label);
+						div.style = 'min-width: 34px; height: 34px; border: 3px solid green; position: absolute; top: 20px; text-align: center; background: #01DF3A; border-radius: 50%; transition-property: transform;transform: translate(' + length + 'px, ' + (height * 80) + 'px);';
+						div.classList.add('highlightNode');
+						div.addEventListener('animationend', function() {
+							div.classList.remove('highlightNode');
+						});
+						// <line x1 = '0' y1 = '0' x2 = '200' y2 = '200' style = 'stroke:rgb(255,0,0);stroke-width:2' />
+						var line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+						line.id = 'binarySearchTreeLine' + bCounter;
+						line.className = 'binarySearchTreeLineClass' + bCounter;
+						// line.setAttribute('width', distance - 40 + 15 + ((height - 0) * 3));
+						// line.setAttribute('height', 40 + 18 + 13 - ((height - 1) * 2));
+						// canvas.style = 'position: absolute; transform: translate(' + (length  + 40 - 2 - ((height - 0) * 2) - distance) + 'px, ' + ((height * 80) - 40 - 13 + ((height - 1) * 1)) + 'px);';
+						line.style = 'stroke: green; stroke-width: 3; stroke-dasharray: 500;';
+						line.classList.add('animateLine');
+						// var ctx = canvas.getContext("2d");
+						// ctx.beginPath();
+						// ctx.moveTo(0, 0);
+						var x1 = length - distance + 20;
+						var y1 = (height * 80) - 80 + 20;
+						var x2 = length + 20;
+						var y2 = (height * 80) + 20;
+						// line.setAttribute('x1', x1);
+						// line.setAttribute('y1', y1);
+						// line.setAttribute('x2', x2);
+						// line.setAttribute('y2', y2);
+						line.setAttribute('d', 'M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2);
+						// ctx.lineTo(distance - 40 + 15 + ((height - 0) * 3), 40 + 18 + 13 + ((height - 1) * 2));
+						// ctx.strokeStyle = 'green';
+						// ctx.lineWidth = 3;
+						// ctx.stroke();
+						bCounter++;
+						// document.getElementById('binarySearchTreeView').append(canvas);
+						// document.getElementById('binarySearchTreeView').append(div);
+						newElement = div;
+						newLine = line;
+						newNumber = number;
+						nodeQueueObject.message = number + ' is greater than ' + node.data + ', so go right';
+						highlightNodeQueue.push(nodeQueueObject);
+						newNode = new Node(number, div);
+						node.right = newNode;
+						node.rightLine = line;
+						break;
+					}
+					else
+					{
+						nodeQueueObject.line = node.rightLine;
+						nodeQueueObject.message = number + ' is greater than ' + node.data + ', so go right';
+						highlightNodeQueue.push(nodeQueueObject);
+						node = node.right;
+					}
+				}
+			}
+		}
+		highlightForInsertion();
+	}
+	function disableInputFields()
+	{
+		document.getElementById('binarySearchTreeToHome').disabled = true;
+		document.getElementById('binaryTreeValue').disabled = true;
+		document.getElementById('insertToBinarySearchTreeButton').disabled = true;
+		document.getElementById('removeValue').disabled = true;
+		document.getElementById('removeFromBinarySearchTreeButton').disabled = true;
+		document.getElementById('emptyBinarySearchTreeButton').disabled = true;
+	}
+	function enableInputFields()
+	{
+		document.getElementById('binarySearchTreeToHome').disabled = false;
+		document.getElementById('binaryTreeValue').disabled = false;
+		document.getElementById('insertToBinarySearchTreeButton').disabled = false;
+		document.getElementById('removeValue').disabled = false;
+		document.getElementById('removeFromBinarySearchTreeButton').disabled = false;
+		document.getElementById('emptyBinarySearchTreeButton').disabled = false;
+	}
+	var g = false;
+	function highlightForInsertion()
+	{
+		if(g)
+		{
+			// alert("** " + nodeQueue[0],node + " ** " + nodeQueue.length);
+			highlightNodeQueue[0].node.removeEventListener('animationend', highlightForInsertion);
+			highlightNodeQueue[0].node.classList.remove('highlightNode');
+			if(highlightNodeQueue[0].line != null) highlightNodeQueue[0].line.classList.remove('highlightLine');
+			highlightNodeQueue.splice(0, 1);
+		}
+		g = true;
+		if(highlightNodeQueue.length == 0)
+		{	
+			if(newLine != null)
+			{
+				document.getElementById('svg').append(newLine);
+				newLine.addEventListener('animationend', showNode, false);
+			}
+			else
+			{
+				showNode();
+			}
+			g = false;
+			return;
+		}
+		// alert(nodeQueue[0].node.classList);
+		highlightNodeQueue[0].node.classList.add('highlightNode');
+		if(highlightNodeQueue[0].line != null) highlightNodeQueue[0].line.classList.add('highlightLine');
+		document.getElementById('addToBinaryTreeErrorSection').innerHTML = highlightNodeQueue[0].message;
+		// alert(nodeQueue[0].node.classList);
+		highlightNodeQueue[0].node.addEventListener('animationend', highlightForInsertion, false);
+	}
+	function showNode()
+	{
+		if(newLine != null) newLine.removeEventListener('animationend', showNode);
+		if(newLine != null) newLine.classList.remove('animateLine');
+		if(newElement != null) document.getElementById('binarySearchTreeView').append(newElement);
+		if(newElement != null) document.getElementById('addToBinaryTreeErrorSection').innerHTML = 'Insertion of ' + newNumber + ' completed';
+		newElement = null;
+		newLine = null;
+		enableInputFields();
+	}
+
+	function AnimateNodeQueueObject(node)
+	{
+		this.node = node;
+		this.oldDistance = 0;
+		this.newDistance = 0;
+		this.oldX = 0;
+		this.oldY = 0;
+		this.newX = 0;
+		this.newY = 0;
+	}
+	function AnimateLineQueueObject(line, animate)
+	{
+		this.line = line;
+		this.animate = animate;
+		this.oldx1 = 0;
+		this.oldy1 = 0;
+		this.oldx2 = 0;
+		this.oldy2 = 0;
+		this.newx1 = 0;
+		this.newy2 = 0;
+		this.newx2 = 0;
+		this.newy2 = 0;
+	}
+	var removeLine = null;
+	var removeNode = null;
+	var animateNodeQueue = [];
+	var animateLineQueue = [];
+	function removeFromBinarySearchTree()
+	{
+		window.scrollTo(0, 0);
+		var error;
+		var number = document.getElementById('removeValue').value;
+		if(number.length == 0 || number == '')
+		{
+			error = "Invalid input";
+			document.getElementById('removeFromBinaryTreeErrorSection').innerHTML = error;
+			return;
+		}
+		if(isNaN(number))
+		{
+			error = "Invalid input";
+			document.getElementById('removeFromBinaryTreeErrorSection').innerHTML = error;
+			return;
+		}
+		else
+		{
+			number = parseInt(number);
+			document.getElementById('removeFromBinaryTreeErrorSection').innerHTML = '';
+		}
+		removeLine = null;
+		removeNode = null;
+		disableInputFields();
+		var length = 640;
+		var distance = 640;
+		var height = 0;
+		var newNode, node;
+		var found = 0;
+		var t = binarySearchTreeRoot;
+		var j;
+		while(t != null)
+		{
+			var nodeQueueObject = new NodeQueueObject(t.element);
+			if(t.data == number)
+			{
+				nodeQueueObject.message = '';
+				highlightNodeQueue.push(nodeQueueObject);
+				break;
+			}
+			j = t;
+			if(number < t.data)
+			{
+				distance /= 2;
+				length -= distance;
+				height++;
+				if(t.left != null) nodeQueueObject.line = t.leftLine;
+				if(t.left != null) nodeQueueObject.message = number + ' is less than ' + t.data + ', so go left';
+				highlightNodeQueue.push(nodeQueueObject);
+				t = t.left;
+			}
+			else
+			{
+				distance /= 2;
+				length += distance;
+				height++;
+				if(t.right != null) nodeQueueObject.line = t.rightLine;
+				if(t.right != null) nodeQueueObject.message = number + ' is greater than ' + t.data + ', so go right';
+				highlightNodeQueue.push(nodeQueueObject);
+				t = t.right;
+			}
+		}
+		if(t == null)
+		{
+			document.getElementById('removeFromBinaryTreeErrorSection').innerHTML = 'Invalid number';
+			highlightForInsertion();
+			return;
+		}
+		
+		if(binarySearchTreeRoot == t)
+		{
+			found = 1;
+		}
+		else
+		{
+			if(j.left == t) found = 2;
+			else found = 3;
+		}
+		if(t.left == null && t.right == null)
+		{
+			if(found == 1)
+			{
+				// binarySearchTreeRoot.element.remove();
+				removeNode = binarySearchTreeRoot.element;
+				binarySearchTreeRoot = null;
+			}
+			if(found == 2)
+			{
+				// j.leftLine.remove();
+				// j.left.element.remove();
+				removeLine = j.leftLine;
+				removeNode = j.left.element;
+				j.left = null;
+			}
+			if(found == 3)
+			{
+				// j.rightLine.remove();
+				// j.right.element.remove();
+				removeLine = j.rightLine;
+				removeNode = j.right.element;
+				j.right = null;
+			}
+		}
+		else if(t.left == null)
+		{
+			if(found == 1)
+			{
+				// binarySearchTreeRoot.element.remove();
+				removeLine = binarySearchTreeRoot.rightLine;
+				removeNode = binarySearchTreeRoot.element;
+				binarySearchTreeRoot = binarySearchTreeRoot.right;
+			}
+			if(found == 2)
+			{
+				// t.rightLine.remove();
+				// j.left.element.remove();
+				removeLine = t.rightLine;
+				removeNode = j.left.element;
+				j.left = t.right;
+			}
+			if(found == 3)
+			{
+				// t.rightLine.remove();
+				// j.right.element.remove();
+				removeLine = t.rightLine;
+				removeNode = j.right.element;
+				j.right = t.right;
+			}
+			let l = length;
+			let d = distance;
+			let h = height;
+			distance /= 2;
+			length += distance;
+			height++;
+			let animateNodeQueueObject = new AnimateNodeQueueObject(t.right);
+			animateNodeQueueObject.oldDistance = distance;
+			animateNodeQueueObject.newDistance = d;
+			animateNodeQueueObject.oldX = length;
+			animateNodeQueueObject.oldY = height * 80;
+			animateNodeQueueObject.newX = l;
+			animateNodeQueueObject.newY = h * 80;
+			animateNodeQueue.push(animateNodeQueueObject);
+			let e = 0;
+			while(e < animateNodeQueue.length)
+			{
+				if(animateNodeQueue[e].node.left != null)
+				{
+					let dist = animateNodeQueue[e].oldDistance;
+					let dis = animateNodeQueue[e].newDistance;
+					dist /= 2;
+					dis /= 2;
+					let animateNodeQueueObject = new AnimateNodeQueueObject(animateNodeQueue[e].node.left);
+					animateNodeQueueObject.oldDistance = dist;
+					animateNodeQueueObject.newDistance = dis;
+					animateNodeQueueObject.oldX = animateNodeQueue[e].oldX - dist;
+					animateNodeQueueObject.oldY = animateNodeQueue[e].oldY + 80;
+					animateNodeQueueObject.newX = animateNodeQueue[e].newX - dis;
+					animateNodeQueueObject.newY = animateNodeQueue[e].newY + 80;;
+					animateNodeQueue.push(animateNodeQueueObject);
+					let animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+					animate.setAttribute('attributeName', 'd');
+					animate.setAttribute('attributeType', 'XML');
+					animate.setAttribute('dur', '1s');
+					animate.setAttribute('repeatCount', '1');
+					animate.setAttribute('from', 'M' + (animateNodeQueue[e].oldX + 20) + ' ' + (animateNodeQueue[e].oldY + 20) + ' L' + (animateNodeQueueObject.oldX + 20) + ' ' + (animateNodeQueueObject.oldY + 20));
+					animate.setAttribute('to', 'M' + (animateNodeQueue[e].newX + 20) + ' ' + (animateNodeQueue[e].newY + 20) + ' L' + (animateNodeQueueObject.newX + 20) + ' ' + (animateNodeQueueObject.newY + 20));
+					let animateLineQueueObject = new AnimateLineQueueObject(animateNodeQueue[e].node.leftLine, animate);
+					animateLineQueue.push(animateLineQueueObject);
+				}
+				if(animateNodeQueue[e].node.right != null)
+				{
+					let dist = animateNodeQueue[e].oldDistance;
+					let dis = animateNodeQueue[e].newDistance;
+					dist /= 2;
+					dis /= 2;
+					let animateNodeQueueObject = new AnimateNodeQueueObject(animateNodeQueue[e].node.right);
+					animateNodeQueueObject.oldDistance = dist;
+					animateNodeQueueObject.newDistance = dis;
+					animateNodeQueueObject.oldX = animateNodeQueue[e].oldX + dist;
+					animateNodeQueueObject.oldY = animateNodeQueue[e].oldY + 80;
+					animateNodeQueueObject.newX = animateNodeQueue[e].newX + dis;
+					animateNodeQueueObject.newY = animateNodeQueue[e].newY + 80;;
+					animateNodeQueue.push(animateNodeQueueObject);
+					let animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+					animate.setAttribute('attributeName', 'd');
+					animate.setAttribute('attributeType', 'XML');
+					animate.setAttribute('dur', '1s');
+					animate.setAttribute('repeatCount', '1');
+					animate.setAttribute('from', 'M' + (animateNodeQueue[e].oldX + 20) + ' ' + (animateNodeQueue[e].oldY + 20) + ' L' + (animateNodeQueueObject.oldX + 20) + ' ' + (animateNodeQueueObject.oldY + 20));
+					animate.setAttribute('to', 'M' + (animateNodeQueue[e].newX + 20) + ' ' + (animateNodeQueue[e].newY + 20) + ' L' + (animateNodeQueueObject.newX + 20) + ' ' + (animateNodeQueueObject.newY + 20));
+					let animateLineQueueObject = new AnimateLineQueueObject(animateNodeQueue[e].node.rightLine, animate);
+					animateLineQueue.push(animateLineQueueObject);
+				}
+				++e;
+			}
+		}
+		else if(t.right == null)
+		{
+			if(found == 1)
+			{
+				// binarySearchTreeRoot.element.remove();
+				removeLine = binarySearchTreeRoot.leftLine;
+				removeNode = binarySearchTreeRoot.element;
+				binarySearchTreeRoot = t.left;
+			}
+			if(found == 2)
+			{
+				// t.leftLine.remove();
+				// j.left.element.remove();
+				removeLine = t.leftLine;
+				removeNode = j.left.element;
+				j.left = t.left;
+			}
+			if(found == 3)
+			{
+				// t.leftLine.remove();
+				// j.right.element.remove();
+				removeLine = t.leftLine;
+				removeNode = j.right.element;
+				j.right = t.left;
+			}
+			let l = length;
+			let d = distance;
+			let h = height;
+			distance /= 2;
+			length -= distance;
+			height++;
+			let animateNodeQueueObject = new AnimateNodeQueueObject(t.left);
+			animateNodeQueueObject.oldDistance = distance;
+			animateNodeQueueObject.newDistance = d;
+			animateNodeQueueObject.oldX = length;
+			animateNodeQueueObject.oldY = height * 80;
+			animateNodeQueueObject.newX = l;
+			animateNodeQueueObject.newY = h * 80;
+			animateNodeQueue.push(animateNodeQueueObject);
+			let e = 0;
+			while(e < animateNodeQueue.length)
+			{
+				if(animateNodeQueue[e].node.left != null)
+				{
+					let dist = animateNodeQueue[e].oldDistance;
+					let dis = animateNodeQueue[e].newDistance;
+					dist /= 2;
+					dis /= 2;
+					let animateNodeQueueObject = new AnimateNodeQueueObject(animateNodeQueue[e].node.left);
+					animateNodeQueueObject.oldDistance = dist;
+					animateNodeQueueObject.newDistance = dis;
+					animateNodeQueueObject.oldX = animateNodeQueue[e].oldX - dist;
+					animateNodeQueueObject.oldY = animateNodeQueue[e].oldY + 80;
+					animateNodeQueueObject.newX = animateNodeQueue[e].newX - dis;
+					animateNodeQueueObject.newY = animateNodeQueue[e].newY + 80;;
+					animateNodeQueue.push(animateNodeQueueObject);
+					let animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+					animate.setAttribute('attributeName', 'd');
+					animate.setAttribute('attributeType', 'XML');
+					animate.setAttribute('dur', '1s');
+					animate.setAttribute('repeatCount', '1');
+					animate.setAttribute('from', 'M' + (animateNodeQueue[e].oldX + 20) + ' ' + (animateNodeQueue[e].oldY + 20) + ' L' + (animateNodeQueueObject.oldX + 20) + ' ' + (animateNodeQueueObject.oldY + 20));
+					animate.setAttribute('to', 'M' + (animateNodeQueue[e].newX + 20) + ' ' + (animateNodeQueue[e].newY + 20) + ' L' + (animateNodeQueueObject.newX + 20) + ' ' + (animateNodeQueueObject.newY + 20));
+					let animateLineQueueObject = new AnimateLineQueueObject(animateNodeQueue[e].node.leftLine, animate);
+					animateLineQueue.push(animateLineQueueObject);
+				}
+				if(animateNodeQueue[e].node.right != null)
+				{
+					let dist = animateNodeQueue[e].oldDistance;
+					let dis = animateNodeQueue[e].newDistance;
+					dist /= 2;
+					dis /= 2;
+					let animateNodeQueueObject = new AnimateNodeQueueObject(animateNodeQueue[e].node.right);
+					animateNodeQueueObject.oldDistance = dist;
+					animateNodeQueueObject.newDistance = dis;
+					animateNodeQueueObject.oldX = animateNodeQueue[e].oldX + dist;
+					animateNodeQueueObject.oldY = animateNodeQueue[e].oldY + 80;
+					animateNodeQueueObject.newX = animateNodeQueue[e].newX + dis;
+					animateNodeQueueObject.newY = animateNodeQueue[e].newY + 80;;
+					animateNodeQueue.push(animateNodeQueueObject);
+					let animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+					animate.setAttribute('attributeName', 'd');
+					animate.setAttribute('attributeType', 'XML');
+					animate.setAttribute('dur', '1s');
+					animate.setAttribute('repeatCount', '1');
+					animate.setAttribute('from', 'M' + (animateNodeQueue[e].oldX + 20) + ' ' + (animateNodeQueue[e].oldY + 20) + ' L' + (animateNodeQueueObject.oldX + 20) + ' ' + (animateNodeQueueObject.oldY + 20));
+					animate.setAttribute('to', 'M' + (animateNodeQueue[e].newX + 20) + ' ' + (animateNodeQueue[e].newY + 20) + ' L' + (animateNodeQueueObject.newX + 20) + ' ' + (animateNodeQueueObject.newY + 20));
+					let animateLineQueueObject = new AnimateLineQueueObject(animateNodeQueue[e].node.rightLine, animate);
+					animateLineQueue.push(animateLineQueueObject);
+				}
+				++e;
+			}
+		}
+		else
+		{
+			// done done
+			let d = distance;
+			let l = length;
+			let h = height;
+			distance /= 2;
+			length += distance;
+			height++;
+			let f = t.right;
+			let e = null;
+			while(f.left != null)
+			{
+				distance /= 2;
+				length -= distance;
+				height++;
+				e = f;
+				f = f.left;
+			}
+			if(found == 1)
+			{
+				if(f == t.right) removeLine = t.rightLine;
+				else
+				{
+					if(f.right != null) removeLine = f.rightLine;
+					else removeLine = e.leftLine;
+				}
+				removeNode = binarySearchTreeRoot.element;
+				binarySearchTreeRoot = f;
+			}
+			if(found == 2)
+			{
+				if(f == t.right) removeLine = t.rightLine;
+				else
+				{
+					if(f.right != null) removeLine = f.rightLine;
+					else removeLine = e.leftLine;
+				}
+				removeNode = j.left.element;
+				j.left = f;
+			}
+			if(found == 3)
+			{
+				if(f == t.right) removeLine = t.rightLine;
+				else
+				{
+					if(f.right != null) removeLine = f.rightLine;
+					else removeLine = e.leftLine;
+				}
+				removeNode = j.right.element;
+				j.right = f;
+			}
+			let animateNodeQueueObject = new AnimateNodeQueueObject(f);
+			animateNodeQueueObject.oldDistance = distance;
+			animateNodeQueueObject.newDistance = d;
+			animateNodeQueueObject.oldX = length;
+			animateNodeQueueObject.oldY = height * 80;
+			animateNodeQueueObject.newX = l;
+			animateNodeQueueObject.newY = h * 80;
+			animateNodeQueue.push(animateNodeQueueObject);
+			l = length;
+			d = distance;
+			h = height;
+			distance /= 2;
+			length += distance;
+			height++;
+			if(f.right != null)
+			{
+				animateNodeQueueObject = new AnimateNodeQueueObject(f.right);
+				animateNodeQueueObject.oldDistance = distance;
+				animateNodeQueueObject.newDistance = d;
+				animateNodeQueueObject.oldX = length;
+				animateNodeQueueObject.oldY = height * 80;
+				animateNodeQueueObject.newX = l;
+				animateNodeQueueObject.newY = h * 80;
+				animateNodeQueue.push(animateNodeQueueObject);
+				let animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+				animate.setAttribute('attributeName', 'd');
+				animate.setAttribute('attributeType', 'XML');
+				animate.setAttribute('dur', '1s');
+				animate.setAttribute('repeatCount', '1');
+				animate.setAttribute('from', 'M' + (animateNodeQueue[0].oldX + 20) + ' ' + (animateNodeQueue[0].oldY + 20) + ' L' + (animateNodeQueueObject.oldX + 20) + ' ' + (animateNodeQueueObject.oldY + 20));
+				animate.setAttribute('to', 'M' + (animateNodeQueue[0].newX + 20) + ' ' + (animateNodeQueue[0].newY + 20) + ' L' + (animateNodeQueueObject.newX + 20) + ' ' + (animateNodeQueueObject.newY + 20));
+				// animate.setAttribute('values', 'M' + (animateNodeQueue[0].oldX + 20) + ' ' + (animateNodeQueue[0].oldY + 20) + ' L' + (animateNodeQueueObject.oldX + 20) + ' ' + (animateNodeQueueObject.oldY + 20) + ';' + 'M' + (animateNodeQueue[0].newX + 20) + ' ' + (animateNodeQueue[0].newY + 20) + ' L' + (animateNodeQueueObject.newX + 20) + ' ' + (animateNodeQueueObject.newY + 20));
+				// animate.setAttribute('keyTimes', '0 ; 2');
+				let animateLineQueueObject = new AnimateLineQueueObject(animateNodeQueue[0].node.rightLine, animate);
+				animateLineQueue.push(animateLineQueueObject);
+			}
+			let i = 1;
+			while(i < animateNodeQueue.length)
+			{
+				if(animateNodeQueue[i].node.left != null)
+				{
+					let dist = animateNodeQueue[i].oldDistance;
+					let dis = animateNodeQueue[i].newDistance;
+					dist /= 2;
+					dis /= 2;
+					let animateNodeQueueObject = new AnimateNodeQueueObject(animateNodeQueue[i].node.left);
+					animateNodeQueueObject.oldDistance = dist;
+					animateNodeQueueObject.newDistance = dis;
+					animateNodeQueueObject.oldX = animateNodeQueue[i].oldX - dist;
+					animateNodeQueueObject.oldY = animateNodeQueue[i].oldY + 80;
+					animateNodeQueueObject.newX = animateNodeQueue[i].newX - dis;
+					animateNodeQueueObject.newY = animateNodeQueue[i].newY + 80;;
+					animateNodeQueue.push(animateNodeQueueObject);
+					let animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+					animate.setAttribute('attributeName', 'd');
+					animate.setAttribute('attributeType', 'XML');
+					animate.setAttribute('dur', '1s');
+					animate.setAttribute('repeatCount', '1');
+					animate.setAttribute('from', 'M' + (animateNodeQueue[i].oldX + 20) + ' ' + (animateNodeQueue[i].oldY + 20) + ' L' + (animateNodeQueueObject.oldX + 20) + ' ' + (animateNodeQueueObject.oldY + 20));
+					animate.setAttribute('to', 'M' + (animateNodeQueue[i].newX + 20) + ' ' + (animateNodeQueue[i].newY + 20) + ' L' + (animateNodeQueueObject.newX + 20) + ' ' + (animateNodeQueueObject.newY + 20));
+					let animateLineQueueObject = new AnimateLineQueueObject(animateNodeQueue[i].node.leftLine, animate);
+					animateLineQueue.push(animateLineQueueObject);
+
+				}
+				if(animateNodeQueue[i].node.right != null)
+				{
+					let dist = animateNodeQueue[i].oldDistance;
+					let dis = animateNodeQueue[i].newDistance;
+					dist /= 2;
+					dis /= 2;
+					let animateNodeQueueObject = new AnimateNodeQueueObject(animateNodeQueue[i].node.right);
+					animateNodeQueueObject.oldDistance = dist;
+					animateNodeQueueObject.newDistance = dis;
+					animateNodeQueueObject.oldX = animateNodeQueue[i].oldX + dist;
+					animateNodeQueueObject.oldY = animateNodeQueue[i].oldY + 80;
+					animateNodeQueueObject.newX = animateNodeQueue[i].newX + dis;
+					animateNodeQueueObject.newY = animateNodeQueue[i].newY + 80;;
+					animateNodeQueue.push(animateNodeQueueObject);
+					let animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+					animate.setAttribute('attributeName', 'd');
+					animate.setAttribute('attributeType', 'XML');
+					animate.setAttribute('dur', '1s');
+					animate.setAttribute('repeatCount', '1');
+					animate.setAttribute('from', 'M' + (animateNodeQueue[i].oldX + 20) + ' ' + (animateNodeQueue[i].oldY + 20) + ' L' + (animateNodeQueueObject.oldX + 20) + ' ' + (animateNodeQueueObject.oldY + 20));
+					animate.setAttribute('to', 'M' + (animateNodeQueue[i].newX + 20) + ' ' + (animateNodeQueue[i].newY + 20) + ' L' + (animateNodeQueueObject.newX + 20) + ' ' + (animateNodeQueueObject.newY + 20));
+					let animateLineQueueObject = new AnimateLineQueueObject(animateNodeQueue[i].node.rightLine, animate);
+					animateLineQueue.push(animateLineQueueObject);
+				}
+				++i;
+			}
+			if(f == t.right)
+			{
+				f.left = t.left;
+				f.leftLine = t.leftLine;
+			}
+			else
+			{
+				e.left = f.right;
+				// e.leftLine = f.rightLine;
+				f.right = t.right;
+				f.rightLine = t.rightLine;
+				f.left = t.left;
+				f.leftLine = t.leftLine;
+			}
+			// done done
+		}
+		highlightForDeletion();
+	}
+	function highlightForDeletion()
+	{
+		if(g)
+		{
+			// alert("** " + nodeQueue[0],node + " ** " + nodeQueue.length);
+			highlightNodeQueue[0].node.removeEventListener('animationend', highlightForDeletion);
+			highlightNodeQueue[0].node.classList.remove('highlightNode');
+			if(highlightNodeQueue[0].line != null) highlightNodeQueue[0].line.classList.remove('highlightLine');
+			highlightNodeQueue.splice(0, 1);
+		}
+		g = true;
+		if(highlightNodeQueue.length == 0)
+		{
+			rearrangeNode();
+			g = false;
+			return;
+		}
+		// alert(nodeQueue[0].node.classList);
+		highlightNodeQueue[0].node.classList.add('highlightNode');
+		if(highlightNodeQueue[0].line != null) highlightNodeQueue[0].line.classList.add('highlightLine');
+		document.getElementById('addToBinaryTreeErrorSection').innerHTML = highlightNodeQueue[0].message;
+		// alert(nodeQueue[0].node.classList);
+		highlightNodeQueue[0].node.addEventListener('animationend', highlightForDeletion, false);
+	}
+	function rearrangeNode()
+	{
+		// alert(removeLine);
+		if(removeLine != null) removeLine.remove();
+		if(removeNode != null) removeNode.remove();
+		let e = 0;
+		while(e < animateNodeQueue.length)
+		{
+			let x = animateNodeQueue[e];
+			x.node.element.classList.add('rearrange');
+			// $('.rearrange:nth-of-type(' + (e + 1) + ')').css('--oldX', ' ' + x.oldX);
+			// $('.rearrange:nth-of-type(' + (e + 1) + ')').css('--oldY', ' ' + x.oldY);
+			// $('.rearrange:nth-of-type(' + (e + 1) + ')').css('--newX', ' ' + x.newX);
+			// $('.rearrange:nth-of-type(' + (e + 1) + ')').css('--newY', ' ' + x.newY);
+			x.node.element.style.setProperty('--oldX', ' ' + x.oldX);
+			x.node.element.style.setProperty('--oldY', ' ' + x.oldY);
+			x.node.element.style.setProperty('--newX', ' ' + x.newX);
+			x.node.element.style.setProperty('--newY', ' ' + x.newY);
+			x.node.element.style.setProperty('transform', 'translate(' + x.newX + 'px, ' + x.newY + 'px)')
+			// alert($('.rearrange:nth-of-type(' + (e + 1) + ')').css('--oldY'));
+		// alert(document.getElementsByClassName('rearrange').length + ' -- ' + document.getElementsByClassName('rearrange')[0].id + ' -- ' + document.documentElement.style.getPropertyValue('--oldX') + ' -- ' + x.oldX + ' -- ' + x.oldY + ' -- ' + x.newX + ' -- ' + x.newY + ' -- ' + x.node.element.innerHTML);
+			++e;
+		}
+		if(e > 0) animateNodeQueue[e - 1].node.element.addEventListener('animationend', afterRearrange, false);
+		else enableInputFields();
+		e = 0;
+		while(e < animateLineQueue.length)
+		{
+			animateLineQueue[e].line.append(animateLineQueue[e].animate);
+			animateLineQueue[e].animate.beginElement();
+			animateLineQueue[e].line.setAttribute('d', animateLineQueue[e].animate.getAttribute('to'));
+			++e;
+		}
+		removeLine = null;
+		removeNode = null;
+	}
+	function afterRearrange()
+	{
+		let e = 0;
+		while(e < animateNodeQueue.length)
+		{
+			animateNodeQueue[e].node.element.classList.remove('rearrange');
+			++e;
+		}
+		if(e > 0) animateNodeQueue[e - 1].node.element.removeEventListener('animationend', afterRearrange);
+		animateNodeQueue.splice(0, animateNodeQueue.length);
+		e = 0;
+		while(e < animateLineQueue.length)
+		{
+			$('#' + animateLineQueue[e].line.id).empty();
+			++e;
+		}
+		animateLineQueue.splice(0, animateLineQueue.length);
+		enableInputFields();
+	}
+	function emptyBinaryTree()
+	{
+		if(binarySearchTreeRoot == null)
+		{
+			document.getElementById('addToBinaryTreeErrorSection').innerHTML = 'Binary Search Tree is already empty';
+			return;
+		}
+		// alert('empty');
+		binarySearchTreeRoot = null;
+		$('#binarySearchTreeView').empty();
+		$('#svg').empty();
+	}
+	// binary tree ends here
+</script>
+</body>
+</html>

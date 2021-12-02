@@ -158,7 +158,7 @@ $("#rear").html("-1");
 ena();
 }
 function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+      return new    Promise(resolve => setTimeout(resolve, ms));
 }
 
 
